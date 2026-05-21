@@ -2,7 +2,7 @@ CC      := gcc
 CFLAGS  := -Wall -Wextra -std=c99 -g
 TARGET  := cagerd
 
-SRCS    := main.c oci_config.c cJSON.c
+SRCS    := main.c 
 OBJS    := $(SRCS:.c=.o)
 
 .PHONY: all clean
