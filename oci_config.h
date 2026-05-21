@@ -1,33 +1,63 @@
 #ifndef OCI_CONFIG_H
 #define OCI_CONFIG_H
 
-/* OCI Runtime Spec config.json struct definitions */
+#include <stdlib.h>
+#include <limits.h>
+
+/**
+ * Minimal OCI Runtime Config - only fields we actually need
+ * 
+ * Everything else is ignored for now. Build in this order:
+ * 1. Parse config ← you are here
+ * 2. Setup namespaces
+ * 3. Setup rootfs
+ * 4. Setup cgroups
+ * 5. exec() process
+ */
 
 typedef struct {
-    /* TODO: args, env, cwd, terminal */
-} oci_process_t;
-
-typedef struct {
-    /* TODO: path, readonly */
-} oci_root_t;
-
-typedef struct {
-    /* TODO: destination, type, source, options */
-} oci_mount_t;
-
-typedef struct {
-    char            *oci_version;
-    oci_process_t    process;
-    oci_root_t       root;
-    oci_mount_t     *mounts;
-    int              mounts_count;
-    /* TODO: hooks, linux, annotations */
+    /* process.args - what to execute */
+    char **args;
+    int args_len;
+    
+    /* process.env - environment variables */
+    char **env;
+    int env_len;
+    
+    /* process.cwd - working directory */
+    char *cwd;
+    
+    /* root.path - root filesystem path */
+    char *rootfs;
+    
+    /* process.user.uid / process.user.gid */
+    int uid;
+    int gid;
+    
+    /* container id (from CLI args, not config.json) */
+    char *container_id;
 } oci_config_t;
 
-/* Load and parse an OCI config.json from disk */
-oci_config_t *oci_config_load(const char *path);
+/**
+ * oci_config_load - Load config.json from bundle path
+ * 
+ * Args:
+ *   bundle_path: Path to container bundle (contains config.json)
+ *   config: Pointer to oci_config_t to fill
+ * 
+ * Returns: 0 on success, -1 on error
+ */
+int oci_config_load(const char *bundle_path, oci_config_t *config);
 
-/* Free all memory owned by an oci_config_t */
-void oci_config_free(oci_config_t *cfg);
+/**
+ * oci_config_free - Free allocated config memory
+ */
+void oci_config_free(oci_config_t *config);
+
+/**
+ * oci_config_print - Debug: print loaded config
+ */
+void oci_config_print(const oci_config_t *config);
 
 #endif /* OCI_CONFIG_H */
+

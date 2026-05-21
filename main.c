@@ -8,6 +8,22 @@
 #include "oci_config.h"
 
 
+/**
+ * cagerd - OCI Container Runtime
+ * 
+ * Calling convention (from containerd):
+ *   cagerd run --bundle /path/to/bundle [--pid-file FILE] container-id
+ * 
+ * Standard OCI runtime interface:
+ *   - read config.json from bundle
+ *   - parse container spec
+ *   - setup namespaces
+ *   - setup rootfs
+ *   - setup cgroups
+ *   - exec process
+ */
+
+
 typedef struct
 {
     char *bundle_path;
@@ -44,7 +60,7 @@ static int parse_args(int argc, char *argv[], runtime_opts_t *opts) {
 
     int opt;
     int option_index = 0;
-    
+    /*Zero out block of memory*/
     memset(opts, 0, sizeof(runtime_opts_t));
 
     optind = 2;
@@ -65,7 +81,7 @@ static int parse_args(int argc, char *argv[], runtime_opts_t *opts) {
         }
     }
 
-    /* Container ID is positional arg after options */
+    /* Checking if Container ID is positional arg after parsing the required options */
     if (optind < argc) {
         opts->container_id = argv[optind];
     }
@@ -90,6 +106,7 @@ int main(int argc, char *argv[])
     /*/path/to/bundle/config.json  ← The JSON file*/
     //setting var called opts = runtime_opts_t
     runtime_opts_t opts;
+    oci_config_t config;
     //zero out var
     runtime_opts_init(&opts);
 
@@ -115,6 +132,46 @@ int main(int argc, char *argv[])
     }
     printf("[main] Container ID: %s\n", opts.container_id);
     printf("[main] Bundle path: %s\n", opts.bundle_path);
+
+    if(opts.pid_file) {
+        printf("[main] PID file: %s/n", opts.pid_file);
+    }
+
+    printf("\n");
+    printf("[main] Step 1: Loading config.json...\n");
+    printf("[main] ================================================\n");
+    
+    /* Loading data to OCI config */
+    /* TODO: uncomment when oci_config_load is implemented*/
+    if (oci_config_load(opts.bundle_path, &config) < 0) {
+        fprintf(stderr, "[main] Failed to load config\n");
+        return 1;
+    }
+    config.container_id = strdup(opts.container_id);
+
+    
+    printf("\n");
+    printf("[main] Step 1 Complete: Config loaded\n");
+    printf("[main] ================================================\n");
+    printf("\n");
+    
+    /* Debug: print loaded config */
+    // oci_config_print(&config);
+    
+    printf("\n");
+    printf("[main] Step 2: Setting up namespaces (next)...\n");
+    printf("[main] Step 3: Setting up rootfs (next)...\n");
+    printf("[main] Step 4: Setting up cgroups (next)...\n");
+    printf("[main] Step 5: Executing process (next)...\n");
+    printf("\n");
+    printf("[main] *** Config parser is working! ***\n");
+    printf("[main] Next: Implement namespace setup\n");
+    
+    // oci_config_free(&config);
+    
+    return 0;
+
+
 
 
 
