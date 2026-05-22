@@ -16,19 +16,6 @@
 
 
 /**
- * oci_config_free - Free all memory owned by a config struct
- * Invoked by: caller of oci_config_load() when done with the config
- * Parameters passed in:
- *   cfg (oci_config_t *) - the config struct to free
- * Returns: nothing
- */
-void oci_config_free(oci_config_t *cfg)
-{
-    /* TODO: free all nested allocations, then free cfg */
-    (void)cfg;
-}
-
-/**
  * read_file - Read an entire file into a heap-allocated buffer
  * Invoked by: oci_config_load() to load config.json into memory
  * Parameters passed in:
@@ -292,3 +279,74 @@ static char **parse_string_array(cJSON *array, int *len) {
 
 
  }
+
+
+ /**
+ * oci_config_free - Free all memory owned by a config struct
+ * Invoked by: caller of oci_config_load() when done with the config
+ * Parameters passed in:
+ *   cfg (oci_config_t *) - the config struct to free
+ * Returns: nothing
+ */
+void oci_config_free(oci_config_t *config) {
+
+    if (!config) {
+        fprintf(stderr, "oci_config: Failed to read %s\n");
+        return -1;
+    }
+
+    if (config->args) {
+        // Move through the "args" JSON array and free heap memory from each index
+        for (int i = 0; config->args[i] != NULL; i++) {
+            free(config->args[i]);
+        }
+        //Free the args json object
+        free(config->args);
+        
+        /*Freeing "env" each element in the array */
+        if (config->env) {
+           for (int i = 0; config->env[i]; i++) {
+                free(config->env[i]);
+           }
+           free(config->env); 
+        }
+
+        if (config->cwd) free(config->cwd);
+        if (config->rootfs) free(config->rootfs);
+        if (config->container_id) free(config->container_id);
+        
+        /* Zeros out all the poniters in "oci_config_t" struct*/
+        memset(config, 0, sizeof(oci_config_t));
+    }
+    
+
+
+}
+
+
+
+/**
+ * oci_config_print - Debug output
+ */
+void oci_config_print(const oci_config_t *config) {
+
+    if (!config) {
+        fprintf(stderr, "oci_config: Failed to read %s\n");
+        return -1;
+    }
+    printf("\n");
+    printf("\n");
+    printf("[config] OCI Config:\n");
+    printf("[config]   container_id: %s\n", config->container_id ? config->container_id : "(none)");
+    printf("[config]   rootfs:       %s\n", config->rootfs);
+    printf("[config]   cwd:          %s\n", config->cwd);
+    printf("[config]   uid:          %d\n", config->uid);
+    printf("[config]   gid:          %d\n", config->gid);
+    printf("[config]   args:         ");
+    for (int i = 0; i < config->args_len; i++) {
+        printf("%s ", config->args[i]);
+    }
+    printf("\n");
+    printf("[config]   env count:    %d\n", config->env_len);
+
+}

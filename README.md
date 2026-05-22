@@ -33,11 +33,15 @@ Understanding how containers work at a low level requires building one. cagerd t
 
 ```
 cagerd/
-├── main.c              (~80 lines) - CLI interface, lifecycle management
-├── oci_config.c        (~200 lines) - Parse config.json, load container spec
-├── oci_config.h        (~40 lines) - Config structures and interfaces
-├── Makefile            - Build with dependency checking
-└── README.md           - This file
+├── src/
+│   ├── main.c
+│   ├── oci_config.c
+│   └── oci_config.h
+├── bundle/
+│   └── config.json
+├── test/
+├── Makefile
+└── README.md
 ```
 
 ### External Dependencies
@@ -397,12 +401,14 @@ grep CONFIG_PID_NS /boot/config-$(uname -r)
 
 ```
 cagerd/
-├── cagerd                 # Compiled executable
-├── main.c, *.h, *.c       # Source code
-├── Makefile               # Build rules
-├── bundle/                # Test bundles (created by make)
+├── src/
+│   ├── main.c, oci_config.c, oci_config.h
+├── bundle/
 │   └── config.json
-└── *.o                    # Object files (temporary)
+├── test/
+├── Makefile
+├── README.md
+└── cagerd                 # Compiled executable
 ```
 
 ## Troubleshooting

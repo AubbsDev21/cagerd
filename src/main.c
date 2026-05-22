@@ -167,24 +167,24 @@ int main(int argc, char *argv[])
     printf("[main] ================================================\n");
     printf("\n");
     
-    // printf("\n");
-    // printf("[main] Step 1 Complete: Config loaded\n");
-    // printf("[main] ================================================\n");
-    // printf("\n");
+    printf("\n");
+    printf("[main] Step 1 Complete: Config loaded\n");
+    printf("[main] ================================================\n");
+    printf("\n");
     
-    // /* Debug: print loaded config */
-    // // oci_config_print(&config);
+    /* Debug: print loaded config */
+    oci_config_print(&config);
     
-    // printf("\n");
-    // printf("[main] Step 2: Setting up namespaces (next)...\n");
-    // printf("[main] Step 3: Setting up rootfs (next)...\n");
-    // printf("[main] Step 4: Setting up cgroups (next)...\n");
-    // printf("[main] Step 5: Executing process (next)...\n");
-    // printf("\n");
-    // printf("[main] *** Config parser is working! ***\n");
-    // printf("[main] Next: Implement namespace setup\n");
+    printf("\n");
+    printf("[main] Step 2: Setting up namespaces (next)...\n");
+    printf("[main] Step 3: Setting up rootfs (next)...\n");
+    printf("[main] Step 4: Setting up cgroups (next)...\n");
+    printf("[main] Step 5: Executing process (next)...\n");
+    printf("\n");
+    printf("[main] *** Config parser is working! ***\n");
+    printf("[main] Next: Implement namespace setup\n");
     
-    // // oci_config_free(&config);
+    oci_config_free(&config);
     
     return 0;
 
