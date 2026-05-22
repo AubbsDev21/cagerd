@@ -1,3 +1,15 @@
+/*
+ * cagerd - OCI container runtime
+ *
+ * Author: AubbsDev21 <bodyaubre@gmail.com>
+ *
+ * Usage:
+ *   ./cagerd run --bundle <path-to-bundle> <container-id>
+ *
+ * Manual test with local config.json:
+ *   ./cagerd run --bundle . test-container
+ *   (expects a valid config.json in the current directory)
+ */
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,7 +65,7 @@ static void usage(const char *prog)
 static int parse_args(int argc, char *argv[], runtime_opts_t *opts) {
     /* Setting up options for cli args*/
     static struct option long_options[] = {
-        {"bundle", required_argument, 0, 'b'},
+        {"bundle_path", required_argument, 0, 'b'},
         {"pid-file", required_argument, 0, 'p'},
         {0, 0, 0, 0}
     };
@@ -149,25 +161,30 @@ int main(int argc, char *argv[])
     }
     config.container_id = strdup(opts.container_id);
 
-    
     printf("\n");
-    printf("[main] Step 1 Complete: Config loaded\n");
+    printf("[main] Debug: Printing out container id\n");
+    printf("[main] END Debug\n");
     printf("[main] ================================================\n");
     printf("\n");
     
-    /* Debug: print loaded config */
-    // oci_config_print(&config);
+    // printf("\n");
+    // printf("[main] Step 1 Complete: Config loaded\n");
+    // printf("[main] ================================================\n");
+    // printf("\n");
     
-    printf("\n");
-    printf("[main] Step 2: Setting up namespaces (next)...\n");
-    printf("[main] Step 3: Setting up rootfs (next)...\n");
-    printf("[main] Step 4: Setting up cgroups (next)...\n");
-    printf("[main] Step 5: Executing process (next)...\n");
-    printf("\n");
-    printf("[main] *** Config parser is working! ***\n");
-    printf("[main] Next: Implement namespace setup\n");
+    // /* Debug: print loaded config */
+    // // oci_config_print(&config);
     
-    // oci_config_free(&config);
+    // printf("\n");
+    // printf("[main] Step 2: Setting up namespaces (next)...\n");
+    // printf("[main] Step 3: Setting up rootfs (next)...\n");
+    // printf("[main] Step 4: Setting up cgroups (next)...\n");
+    // printf("[main] Step 5: Executing process (next)...\n");
+    // printf("\n");
+    // printf("[main] *** Config parser is working! ***\n");
+    // printf("[main] Next: Implement namespace setup\n");
+    
+    // // oci_config_free(&config);
     
     return 0;
 
